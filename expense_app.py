@@ -70,7 +70,7 @@ with st.form("expense_form"):
     # NEW — Card Used
     card = st.selectbox(
         "Card Used 💳",
-        ["Visa", "Mastercard", "Amex", "Debit", "Cash", "Other"]
+        ["HSBC", "Amex", "Mastercard", "Other"]
     )
 
     amount = st.number_input("Amount (£)", min_value=0.0, format="%.2f")
