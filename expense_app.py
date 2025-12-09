@@ -122,8 +122,7 @@ inject_custom_css()
 st.markdown("<div class='top-title'>💸 Katie's Expense Tracker</div>",unsafe_allow_html=True)
 st.markdown("<div class='top-subtitle'>♡ I love you ♡</div>",unsafe_allow_html=True)
 
-# 🐶 Pixel dog mascot under title
-st.image("dog.png", width=170)
+
 
 
 
