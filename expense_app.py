@@ -121,11 +121,15 @@ inject_custom_css()
 # ---------- TITLE ----------
 st.markdown("<div class='top-title'>💸 Katie's Expense Tracker</div>",unsafe_allow_html=True)
 st.markdown("<div class='top-subtitle'>♡ I love you ♡</div>",unsafe_allow_html=True)
-
-from PIL import Image
-dog = Image.open("dog.png")
-st.image(dog, width=160)
-
+#dog
+st.markdown(
+    """
+    <div style='text-align:center; margin-top:-10px; margin-bottom:20px;'>
+        <img src='dog.png' width='160'>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
 
 
 
