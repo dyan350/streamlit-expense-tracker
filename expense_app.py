@@ -13,103 +13,107 @@ st.set_page_config(
 
 # ========= 🌸 PINK MOBILE-FRIENDLY PIXEL CSS =========
 def inject_custom_css():
-    st.markdown("""
-    <style>
+    st.markdown(
+        """
+        <style>
 
-    /* ---------------------------
-       GLOBAL + BACKGROUND
-    ----------------------------*/
-    .stApp {
-        background:
-          linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px),
-          linear-gradient(180deg, rgba(255,255,255,0.14) 1px, #ffe6f2 1px),
-          radial-gradient(circle at top left, #ffc1e3 0, #ffe6f7 40%, #ffd9ec 80%);
-        background-size: 16px 16px, 16px 16px, cover;
-        color:#3a1a45;
-        font-family:"Press Start 2P", sans-serif;
-    }
+        /* GLOBAL + BACKGROUND */
+        .stApp {
+            background:
+              linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px),
+              linear-gradient(180deg, rgba(255,255,255,0.14) 1px, #ffe6f2 1px),
+              radial-gradient(circle at top left, #ffc1e3 0, #ffe6f7 40%, #ffd9ec 80%);
+            background-size: 16px 16px, 16px 16px, cover;
+            font-family: "Press Start 2P", sans-serif;
+        }
 
-    html, body { -webkit-text-size-adjust:100%; }
+        html, body { -webkit-text-size-adjust: 100%; }
 
-    /* ---------------------------
-       TITLE (scales on iPhone)
-    ----------------------------*/
-    .top-title{
-        font-size:clamp(18px,4.5vw,30px);
-        text-transform:uppercase;
-        color:#ff4f9a;
-        font-weight:700;
-        text-shadow:
-            3px 3px 0 #ff94c2,
-            4px 4px 0 #2c2a87;
-    }
-    .top-subtitle{
-        font-size:clamp(11px,3vw,17px);
-        color:#6b3c7a;
-        margin-bottom:20px;
-    }
+        /* 🔥 FORCE ALL TEXT DARK BY DEFAULT */
+        * {
+            color: #3a1a45 !important;
+        }
 
-    /* ---------------------------
-       PIXEL CARD PANELS
-    ----------------------------*/
-    .pixel-card{
-        border:3px solid #2c2a87;
-        background:#ffeaf8;
-        box-shadow:4px 4px 0 #ff94c2;
-        border-radius:0;
-        padding:clamp(12px,3vw,26px);
-        margin-bottom:22px;
-    }
-    .pixel-card h2,.pixel-card h3{
-        color:#ff4f9a;
-        font-size:clamp(15px,4vw,24px);
-    }
+        /* TITLE (override the global rule above) */
+        .top-title{
+            font-size: clamp(18px,4.5vw,30px);
+            text-transform: uppercase;
+            font-weight: 700;
+            color: #ff4f9a !important;
+            text-shadow:
+                3px 3px 0 #ff94c2,
+                4px 4px 0 #2c2a87;
+        }
+        .top-subtitle{
+            font-size: clamp(11px,3vw,17px);
+            color: #6b3c7a !important;
+            text-shadow: none;
+            margin-bottom: 20px;
+        }
 
-    /* ---------------------------
-       INPUTS + BUTTONS = BIG for fingers
-    ----------------------------*/
-    .stButton>button,
-    input, textarea,
-    div[data-baseweb="select"]>div {
-        border-radius:0!important;
-        border:2px solid #2c2a87!important;
-        background:#ffd9ec!important;
-        color:#3a1a45!important;
-        font-size:clamp(13px,3.3vw,19px)!important;
-        height:clamp(42px,7vw,65px)!important;
-        box-shadow:3px 3px 0 #ff94c2!important;
-    }
-    .stButton>button:hover{
-        background:#ff6ea9!important;
-        color:white!important;
-        box-shadow:4px 4px 0 #2c2a87!important;
-    }
-    .stNumberInput input{ height:clamp(42px,6.5vw,65px)!important; }
-    ::placeholder{ color:#6b3c7a!important; }
+        /* PIXEL CARDS */
+        .pixel-card{
+            border: 3px solid #2c2a87;
+            background: #ffeaf8;
+            box-shadow: 4px 4px 0 #ff94c2;
+            border-radius: 0;
+            padding: clamp(12px,3vw,26px);
+            margin-bottom: 22px;
+        }
+        .pixel-card h2, .pixel-card h3{
+            color: #ff4f9a !important;
+            font-size: clamp(15px,4vw,24px);
+        }
 
-    /* Bigger checkboxes */
-    .stCheckbox input{ width:22px;height:22px; }
-    .stCheckbox label{ font-size:clamp(12px,3vw,18px)!important; }
+        /* INPUTS + BUTTONS */
+        .stButton>button,
+        input, textarea,
+        div[data-baseweb="select"]>div {
+            border-radius: 0 !important;
+            border: 2px solid #2c2a87 !important;
+            background: #ffd9ec !important;
+            color: #3a1a45 !important;
+            font-size: clamp(13px,3.3vw,19px) !important;
+            height: clamp(42px,7vw,65px) !important;
+            box-shadow: 3px 3px 0 #ff94c2 !important;
+        }
+        .stButton>button:hover{
+            background: #ff6ea9 !important;
+            color: #ffffff !important;
+            box-shadow: 4px 4px 0 #2c2a87 !important;
+        }
 
-    /* ---------------------------
-       TABLES
-    ----------------------------*/
-    .stDataFrame,.stTable{
-        border-radius:0!important;
-        border:2px solid #2c2a87!important;
-        font-size:clamp(11px,3vw,16px);
-        box-shadow:3px 3px 0 #ff94c2!important;
-    }
+        .stNumberInput input{
+            height: clamp(42px,6.5vw,65px) !important;
+        }
 
-    /* Sidebar styling */
-    [data-testid="stSidebar"]{
-        background:#ffeaf8!important;
-        border-right:3px solid #2c2a87;
-        font-size:clamp(12px,3vw,16px);
-    }
+        ::placeholder{
+            color: #6b3c7a !important;
+        }
 
-    </style>
-    """,unsafe_allow_html=True)
+        /* CHECKBOXES */
+        .stCheckbox input{ width: 22px; height: 22px; }
+        .stCheckbox label{ font-size: clamp(12px,3vw,18px) !important; }
+
+        /* TABLES */
+        .stDataFrame, .stTable{
+            border-radius: 0 !important;
+            border: 2px solid #2c2a87 !important;
+            font-size: clamp(11px,3vw,16px);
+            box-shadow: 3px 3px 0 #ff94c2 !important;
+        }
+
+        /* SIDEBAR */
+        [data-testid="stSidebar"]{
+            background: #ffeaf8 !important;
+            border-right: 3px solid #2c2a87;
+            font-size: clamp(12px,3vw,16px);
+        }
+
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
 # =======================================================
 inject_custom_css()
 
