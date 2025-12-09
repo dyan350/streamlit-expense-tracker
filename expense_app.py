@@ -116,7 +116,7 @@ inject_custom_css()
 
 # ---------- TITLE ----------
 st.markdown("<div class='top-title'>💸 Katie's Expense Tracker</div>",unsafe_allow_html=True)
-st.markdown("<div class='top-subtitle'>Cute pink pixels. Track spending & IOUs with love. ♡</div>",unsafe_allow_html=True)
+st.markdown("<div class='top-subtitle'>♡ I love you ♡</div>",unsafe_allow_html=True)
 
 
 
