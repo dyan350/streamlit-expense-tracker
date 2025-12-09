@@ -7,7 +7,7 @@ import pandas as pd
 st.title("💸 Katie's Expense Tracker")
 
 EXPENSE_FILE = "expenses.csv"
-OWED_FILE = "owed.csv"   # NEW: where we store “people owe me” items
+OWED_FILE = "owed.csv"   # where we store “people owe me” items
 
 # --------------------------------
 # Load expenses from CSV into session
@@ -43,6 +43,10 @@ if "owed" not in st.session_state:
             for row in reader:
                 row["Amount"] = float(row["Amount"])
                 st.session_state.owed.append(row)
+
+# Track last action in owed section so we can undo it
+if "last_owed_action" not in st.session_state:
+    st.session_state.last_owed_action = None
 
 # --------------------------------
 # Sidebar Filters (Year + Month)
@@ -125,6 +129,10 @@ if submitted:
 # --------------------------------
 st.header("🔫 Give me my money bro 🔫")
 
+# Optional total owed display
+total_owed = sum(item["Amount"] for item in st.session_state.owed) if st.session_state.owed else 0.0
+st.write(f"**Total people owe you: £{total_owed:.2f}**")
+
 # Form to add a new "owed" item
 with st.form("owed_form"):
     who = st.text_input("Who owes you?", placeholder="e.g. Alice")
@@ -158,6 +166,12 @@ if owed_submitted:
                 writer.writeheader()
             writer.writerow(new_owed)
 
+        # remember this as last action for undo
+        st.session_state.last_owed_action = {
+            "kind": "add",
+            "items": [new_owed],
+        }
+
         st.success("Added to 'people owe me' list ✅")
         st.rerun()
     else:
@@ -168,6 +182,7 @@ if st.session_state.owed:
     st.subheader("Pending payments")
 
     to_remove_indices = []
+    settlements = []  # store (owed_item, reimb) for undo
 
     for i, item in enumerate(st.session_state.owed):
         cols = st.columns([1, 5])
@@ -203,6 +218,7 @@ if st.session_state.owed:
 
             # 2) Mark this owed entry to be removed
             to_remove_indices.append(i)
+            settlements.append({"owed": item, "reimb": reimb})
 
     # Remove paid items and rewrite owed CSV
     if to_remove_indices:
@@ -220,10 +236,112 @@ if st.session_state.owed:
             if os.path.exists(OWED_FILE):
                 os.remove(OWED_FILE)
 
+        # remember this as last action for undo (settling debts)
+        st.session_state.last_owed_action = {
+            "kind": "settle",
+            "items": settlements,
+        }
+
         st.success("Marked as paid ✅ and added reimbursement to your tracker.")
         st.rerun()
 else:
     st.info("No one owes you money right now.")
+
+# --------------------------------
+# Undo last owed action (add or settle)
+# --------------------------------
+st.subheader("🪄 Undo last change in 'people owe me'")
+
+if st.button("Undo last owed action"):
+    action = st.session_state.get("last_owed_action")
+
+    if not action:
+        st.warning("There is no recent owed action to undo.")
+    else:
+        kind = action["kind"]
+        items = action["items"]
+
+        if kind == "add":
+            # Remove the last added owed item
+            target = items[0]
+            # Remove one matching entry from owed list (from the end)
+            for idx in range(len(st.session_state.owed) - 1, -1, -1):
+                o = st.session_state.owed[idx]
+                if (
+                    o["Who"] == target["Who"]
+                    and o["Description"] == target["Description"]
+                    and o["Card"] == target["Card"]
+                    and float(o["Amount"]) == float(target["Amount"])
+                    and o["Date"] == target["Date"]
+                ):
+                    st.session_state.owed.pop(idx)
+                    break
+
+            # Rewrite owed CSV
+            if st.session_state.owed:
+                with open(OWED_FILE, "w", newline="") as f:
+                    fieldnames = ["Who", "Description", "Card", "Amount", "Date"]
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
+                    writer.writeheader()
+                    for row in st.session_state.owed:
+                        writer.writerow(row)
+            else:
+                if os.path.exists(OWED_FILE):
+                    os.remove(OWED_FILE)
+
+            st.success("Undid last 'add to owed list' action.")
+            st.session_state.last_owed_action = None
+            st.rerun()
+
+        elif kind == "settle":
+            # For each settlement, re-add owed item and remove reimbursement
+            for pair in items:
+                owed_item = pair["owed"]
+                reimb = pair["reimb"]
+
+                # Re-add owed item
+                st.session_state.owed.append(owed_item)
+
+                # Remove matching reimbursement from expenses (search from end)
+                for idx in range(len(st.session_state.expenses) - 1, -1, -1):
+                    e = st.session_state.expenses[idx]
+                    if (
+                        e["Description"] == reimb["Description"]
+                        and e["Category"] == reimb["Category"]
+                        and e["Card"] == reimb["Card"]
+                        and float(e["Amount"]) == float(reimb["Amount"])
+                        and e["Date"] == reimb["Date"]
+                    ):
+                        st.session_state.expenses.pop(idx)
+                        break
+
+            # Rewrite owed CSV
+            if st.session_state.owed:
+                with open(OWED_FILE, "w", newline="") as f:
+                    fieldnames = ["Who", "Description", "Card", "Amount", "Date"]
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
+                    writer.writeheader()
+                    for row in st.session_state.owed:
+                        writer.writerow(row)
+            else:
+                if os.path.exists(OWED_FILE):
+                    os.remove(OWED_FILE)
+
+            # Rewrite expenses CSV
+            if st.session_state.expenses:
+                with open(EXPENSE_FILE, "w", newline="") as f:
+                    fieldnames = ["Description", "Category", "Card", "Amount", "Date"]
+                    writer = csv.DictWriter(f, fieldnames=fieldnames)
+                    writer.writeheader()
+                    for row in st.session_state.expenses:
+                        writer.writerow(row)
+            else:
+                if os.path.exists(EXPENSE_FILE):
+                    os.remove(EXPENSE_FILE)
+
+            st.success("Undid last 'paid' action and restored owed + expenses.")
+            st.session_state.last_owed_action = None
+            st.rerun()
 
 # --------------------------------
 # All Expenses Table
