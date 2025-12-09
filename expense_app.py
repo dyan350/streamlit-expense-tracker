@@ -11,503 +11,360 @@ st.set_page_config(
     layout="wide",
 )
 
-# ---------- PINK PIXEL CSS ----------
+# ========= 🌸 PINK MOBILE-FRIENDLY PIXEL CSS =========
 def inject_custom_css():
-    st.markdown(
-        """
-        <style>
-        /* === APP BACKGROUND: soft pink pixel grid === */
-        .stApp {
-            background:
-              linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px),
-              linear-gradient(180deg, rgba(255,255,255,0.35) 1px, #ffe6f2 1px),
-              radial-gradient(circle at 0 0, #ffc1e3 0, #ffe6f7 40%, #ffd9ec 80%);
-            background-size: 16px 16px, 16px 16px, cover;
-            color: #4a2456;
-            font-family: "Press Start 2P", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        }
+    st.markdown("""
+    <style>
 
-        html, body, [class*="css"] {
-            font-family: "Press Start 2P", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
-        }
+    /* ---------------------------
+       GLOBAL + BACKGROUND
+    ----------------------------*/
+    .stApp {
+        background:
+          linear-gradient(90deg, rgba(255,255,255,0.14) 1px, transparent 1px),
+          linear-gradient(180deg, rgba(255,255,255,0.14) 1px, #ffe6f2 1px),
+          radial-gradient(circle at top left, #ffc1e3 0, #ffe6f7 40%, #ffd9ec 80%);
+        background-size: 16px 16px, 16px 16px, cover;
+        color:#3a1a45;
+        font-family:"Press Start 2P", sans-serif;
+    }
 
-        /* === TOP TITLE STYLES === */
-        .top-title {
-            font-size: 1.4rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: #ff6ea9; /* medium pink */
-            text-shadow: 3px 3px 0 #ff94c2, 5px 5px 0 #2c2a87; /* light pink + dark outline */
-            margin-bottom: 0.5rem;
-        }
-        .top-subtitle {
-            font-size: 0.7rem;
-            color: #ff7eb8;
-            text-shadow: 2px 2px 0 #ffffff;
-            margin-bottom: 1.5rem;
-        }
+    html, body { -webkit-text-size-adjust:100%; }
 
-        /* === PINK PIXEL CARDS === */
-        .pixel-card {
-            border: 3px solid #2c2a87;     /* dark blue outline */
-            border-radius: 0;
-            padding: 1rem;
-            margin-bottom: 1.5rem;
-            background: #ffe6f7;           /* pale pink */
-            box-shadow: 4px 4px 0 #ff94c2; /* pink shadow */
-        }
+    /* ---------------------------
+       TITLE (scales on iPhone)
+    ----------------------------*/
+    .top-title{
+        font-size:clamp(18px,4.5vw,30px);
+        text-transform:uppercase;
+        color:#ff4f9a;
+        font-weight:700;
+        text-shadow:
+            3px 3px 0 #ff94c2,
+            4px 4px 0 #2c2a87;
+    }
+    .top-subtitle{
+        font-size:clamp(11px,3vw,17px);
+        color:#6b3c7a;
+        margin-bottom:20px;
+    }
 
-        .pixel-card h1, .pixel-card h2, .pixel-card h3 {
-            color: #ff4f9a;
-            text-shadow: 2px 2px 0 #ffffff;
-        }
+    /* ---------------------------
+       PIXEL CARD PANELS
+    ----------------------------*/
+    .pixel-card{
+        border:3px solid #2c2a87;
+        background:#ffeaf8;
+        box-shadow:4px 4px 0 #ff94c2;
+        border-radius:0;
+        padding:clamp(12px,3vw,26px);
+        margin-bottom:22px;
+    }
+    .pixel-card h2,.pixel-card h3{
+        color:#ff4f9a;
+        font-size:clamp(15px,4vw,24px);
+    }
 
-        /* === WIDGETS (buttons, inputs, selects) === */
-        .stButton>button,
-        .stCheckbox,
-        .stTextInput>div>div>input,
-        .stNumberInput input,
-        div[data-baseweb="select"] > div {
-            border-radius: 0 !important;
-            border: 2px solid #2c2a87 !important;
-            background: #ffd9ec !important;
-            color: #4a2456 !important;
-            box-shadow: 3px 3px 0 #ff94c2 !important;
-        }
+    /* ---------------------------
+       INPUTS + BUTTONS = BIG for fingers
+    ----------------------------*/
+    .stButton>button,
+    input, textarea,
+    div[data-baseweb="select"]>div {
+        border-radius:0!important;
+        border:2px solid #2c2a87!important;
+        background:#ffd9ec!important;
+        color:#3a1a45!important;
+        font-size:clamp(13px,3.3vw,19px)!important;
+        height:clamp(42px,7vw,65px)!important;
+        box-shadow:3px 3px 0 #ff94c2!important;
+    }
+    .stButton>button:hover{
+        background:#ff6ea9!important;
+        color:white!important;
+        box-shadow:4px 4px 0 #2c2a87!important;
+    }
+    .stNumberInput input{ height:clamp(42px,6.5vw,65px)!important; }
+    ::placeholder{ color:#6b3c7a!important; }
 
-        .stButton>button:hover {
-            background: #ff6ea9 !important;
-            color: #ffffff !important;
-            box-shadow: 4px 4px 0 #2c2a87 !important;
-        }
+    /* Bigger checkboxes */
+    .stCheckbox input{ width:22px;height:22px; }
+    .stCheckbox label{ font-size:clamp(12px,3vw,18px)!important; }
 
-        /* Inputs text caret color */
-        input {
-            caret-color: #ff4f9a !important;
-        }
+    /* ---------------------------
+       TABLES
+    ----------------------------*/
+    .stDataFrame,.stTable{
+        border-radius:0!important;
+        border:2px solid #2c2a87!important;
+        font-size:clamp(11px,3vw,16px);
+        box-shadow:3px 3px 0 #ff94c2!important;
+    }
 
-        /* TABLES / DATAFRAMES */
-        .stDataFrame, .stTable {
-            border-radius: 0 !important;
-            border: 2px solid #2c2a87 !important;
-            box-shadow: 3px 3px 0 #ff94c2 !important;
-        }
+    /* Sidebar styling */
+    [data-testid="stSidebar"]{
+        background:#ffeaf8!important;
+        border-right:3px solid #2c2a87;
+        font-size:clamp(12px,3vw,16px);
+    }
 
-        /* Sidebar background soften */
-        [data-testid="stSidebar"] {
-            background-color: #ffe6f7 !important;
-            border-right: 3px solid #2c2a87;
-        }
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
-
+    </style>
+    """,unsafe_allow_html=True)
+# =======================================================
 inject_custom_css()
 
+
 # ---------- TITLE ----------
-st.markdown(
-    "<div class='top-title'>💸 Katie's Expense Tracker</div>",
-    unsafe_allow_html=True,
-)
-st.markdown(
-    "<div class='top-subtitle'>♡ I love you baby ♡</div>",
-    unsafe_allow_html=True,
-)
+st.markdown("<div class='top-title'>💸 Katie's Expense Tracker</div>",unsafe_allow_html=True)
+st.markdown("<div class='top-subtitle'>Cute pink pixels. Track spending & IOUs with love. ♡</div>",unsafe_allow_html=True)
 
-# If you save your pixel image as 'katie_pixel.png' in this folder,
-# you can uncomment this line to show it:
-# st.image("katie_pixel.png", width=140)
 
-# ---------- FILE NAMES ----------
-EXPENSE_FILE = "expenses.csv"
-OWED_FILE = "owed.csv"   # where we store “people owe me” items
 
-# ---------- LOAD EXPENSES ----------
+# ---------- FILES ----------
+EXPENSE_FILE="expenses.csv"
+OWED_FILE="owed.csv"
+
+
+# ========== LOAD EXPENSES ==========
 if "expenses" not in st.session_state:
-    st.session_state.expenses = []
+    st.session_state.expenses=[]
 
     if os.path.exists(EXPENSE_FILE):
-        with open(EXPENSE_FILE, mode="r", newline="") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                row["Amount"] = float(row["Amount"])
-                if "Card" not in row:
-                    row["Card"] = "Unknown"
+        with open(EXPENSE_FILE,"r") as f:
+            for row in csv.DictReader(f):
+                row["Amount"]=float(row["Amount"])
+                if "Card" not in row: row["Card"]="Unknown"
                 st.session_state.expenses.append(row)
 
-df = None
+df=None
 if st.session_state.expenses:
-    df = pd.DataFrame(st.session_state.expenses)
-    df["Date"] = pd.to_datetime(df["Date"])
+    df=pd.DataFrame(st.session_state.expenses)
+    df["Date"]=pd.to_datetime(df["Date"])
 
-# ---------- LOAD OWED ITEMS ----------
+
+# ========== LOAD OWED ==========
 if "owed" not in st.session_state:
-    st.session_state.owed = []
-
+    st.session_state.owed=[]
     if os.path.exists(OWED_FILE):
-        with open(OWED_FILE, mode="r", newline="") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                row["Amount"] = float(row["Amount"])
-                st.session_state.owed.append(row)
+        with open(OWED_FILE,"r") as f:
+            for r in csv.DictReader(f):
+                r["Amount"]=float(r["Amount"])
+                st.session_state.owed.append(r)
 
-# Track last action in owed section for undo
 if "last_owed_action" not in st.session_state:
-    st.session_state.last_owed_action = None
+    st.session_state.last_owed_action=None
 
-# ---------- SIDEBAR FILTERS (YEAR / MONTH / CARD) ----------
+
+
+# ========== SIDEBAR FILTERS ==========
 st.sidebar.header("Filters")
 
-filtered_df = None
-selected_year = None
-selected_month_name = "All months"
-selected_card_label = "All cards"
-
+filtered_df=None
 if df is not None and not df.empty:
-    years = sorted(df["Date"].dt.year.unique())
-    selected_year = st.sidebar.selectbox("Year", years, index=len(years) - 1)
+    years=sorted(df["Date"].dt.year.unique())
+    year=st.sidebar.selectbox("Year",years,index=len(years)-1)
 
-    month_names = [
-        "All months",
-        "January", "February", "March", "April", "May", "June",
-        "July", "August", "September", "October", "November", "December"
-    ]
-    month_numbers = [None, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+    months=["All","Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"]
+    month_num=[None,1,2,3,4,5,6,7,8,9,10,11,12]
+    month_choice=st.sidebar.selectbox("Month",months)
+    month_selected=month_num[months.index(month_choice)]
 
-    selected_month_name = st.sidebar.selectbox("Month", month_names, index=0)
-    selected_month = month_numbers[month_names.index(selected_month_name)]
+    cards=["All"]+sorted(df["Card"].astype(str).unique())
+    card_choice=st.sidebar.selectbox("Card",cards)
 
-    cards = sorted(df["Card"].astype(str).unique())
-    card_options = ["All cards"] + cards
-    selected_card_label = st.sidebar.selectbox("Card", card_options, index=0)
+    filtered_df=df[df["Date"].dt.year==year]
+    if month_selected: filtered_df=filtered_df[filtered_df["Date"].dt.month==month_selected]
+    if card_choice!="All": filtered_df=filtered_df[filtered_df["Card"]==card_choice]
 
-    filtered_df = df[df["Date"].dt.year == selected_year]
 
-    if selected_month is not None:
-        filtered_df = filtered_df[filtered_df["Date"].dt.month == selected_month]
-
-    if selected_card_label != "All cards":
-        filtered_df = filtered_df[filtered_df["Card"] == selected_card_label]
-else:
-    st.sidebar.info("No data yet to filter.")
-
-# ---------- ADD EXPENSE ----------
-st.markdown("<div class='pixel-card'>", unsafe_allow_html=True)
+# ========== ADD EXPENSE ==========
+st.markdown("<div class='pixel-card'>",unsafe_allow_html=True)
 st.header("➕ Add New Expense")
 
-with st.form("expense_form"):
-    description = st.text_input("Description", placeholder="e.g. Groceries, Uber, Rent")
+with st.form("add_exp"):
+    desc=st.text_input("Description",placeholder="eg. Groceries, Uber, Rent")
+    cat=st.selectbox("Category",["Food","Transport","Entertainment","Bills","Shopping","Other"])
+    card=st.selectbox("Card Used 💳",["Visa","Mastercard","Amex","Debit","Cash","Other"])
+    amt=st.number_input("Amount (£)",min_value=0.0,format="%.2f")
+    d=st.date_input("Date",value=date.today())
+    go=st.form_submit_button("Add Expense")
 
-    category = st.selectbox(
-        "Category",
-        ["Food", "Transport", "Entertainment", "Bills", "Shopping", "Other"]
-    )
+if go and desc and amt>0:
+    row={"Description":desc,"Category":cat,"Card":card,"Amount":float(amt),"Date":d.strftime("%Y-%m-%d")}
+    st.session_state.expenses.append(row)
 
-    card = st.selectbox(
-        "Card Used 💳",
-        ["Visa", "Mastercard", "Amex", "Debit", "Cash", "Other"]
-    )
+    newfile=not os.path.exists(EXPENSE_FILE)
+    with open(EXPENSE_FILE,"a",newline="") as f:
+        w=csv.DictWriter(f,fieldnames=row.keys())
+        if newfile: w.writeheader()
+        w.writerow(row)
 
-    amount = st.number_input("Amount (£)", min_value=0.0, format="%.2f")
-    exp_date = st.date_input("Date", value=date.today())
+    st.success("Added! 💗")
+    st.rerun()
 
-    submitted = st.form_submit_button("Add Expense")
+st.markdown("</div>",unsafe_allow_html=True)
 
-if submitted:
-    if description and amount > 0:
-        new_expense = {
-            "Description": description,
-            "Category": category,
-            "Card": card,
-            "Amount": float(amount),
-            "Date": exp_date.strftime("%Y-%m-%d")
-        }
 
-        st.session_state.expenses.append(new_expense)
-
-        file_exists = os.path.exists(EXPENSE_FILE)
-        with open(EXPENSE_FILE, mode="a", newline="") as f:
-            fieldnames = ["Description", "Category", "Card", "Amount", "Date"]
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            if not file_exists:
-                writer.writeheader()
-            writer.writerow(new_expense)
-
-        st.success("Expense added and saved permanently! 💾")
-        st.rerun()
-    else:
-        st.error("Enter a description and an amount greater than zero.")
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-# ---------- MONEY PEOPLE OWE ME ----------
-st.markdown("<div class='pixel-card'>", unsafe_allow_html=True)
+# ========== OWED SECTION ==========
+st.markdown("<div class='pixel-card'>",unsafe_allow_html=True)
 st.header("🔫 Give me my money bro 🔫")
 
-total_owed = sum(item["Amount"] for item in st.session_state.owed) if st.session_state.owed else 0.0
-st.write(f"**Total people owe you: £{total_owed:.2f}**")
+owed_total=sum(o["Amount"] for o in st.session_state.owed)
+st.write(f"**People owe you: £{owed_total:.2f}**")
 
-with st.form("owed_form"):
-    who = st.text_input("Who owes you?", placeholder="e.g. Alice")
-    owed_desc = st.text_input("What is it for?", placeholder="e.g. Dinner split")
-    owed_card = st.selectbox(
-        "Which card did you use to pay? 💳",
-        ["Visa", "Mastercard", "Amex", "Debit", "Cash", "Other"],
-        key="owed_card_select"
-    )
-    owed_amount = st.number_input(
-        "Amount they owe (£)",
-        min_value=0.0,
-        format="%.2f",
-        key="owed_amount_input"
-    )
-    owed_date = st.date_input(
-        "Date of expense",
-        value=date.today(),
-        key="owed_date_input"
-    )
+with st.form("owed_add"):
+    who=st.text_input("Who owes you?",placeholder="eg. Alice")
+    why=st.text_input("What for?",placeholder="eg. Dinner Split")
+    card_o=st.selectbox("Card paid with",["Visa","Mastercard","Amex","Debit","Cash","Other"])
+    amt_o=st.number_input("Amount (£)",min_value=0.0,format="%.2f")
+    date_o=st.date_input("Date",value=date.today())
+    add_o=st.form_submit_button("Add to list")
 
-    owed_submitted = st.form_submit_button("Add to owed list")
+if add_o and who and why and amt_o>0:
+    entry={"Who":who,"Description":why,"Card":card_o,"Amount":float(amt_o),"Date":date_o.strftime("%Y-%m-%d")}
+    st.session_state.owed.append(entry)
 
-if owed_submitted:
-    if who and owed_desc and owed_amount > 0:
-        new_owed = {
-            "Who": who,
-            "Description": owed_desc,
-            "Card": owed_card,
-            "Amount": float(owed_amount),
-            "Date": owed_date.strftime("%Y-%m-%d")
-        }
-        st.session_state.owed.append(new_owed)
+    newfile=not os.path.exists(OWED_FILE)
+    with open(OWED_FILE,"a",newline="") as f:
+        w=csv.DictWriter(f,fieldnames=entry.keys())
+        if newfile: w.writeheader()
+        w.writerow(entry)
 
-        file_exists = os.path.exists(OWED_FILE)
-        with open(OWED_FILE, mode="a", newline="") as f:
-            fieldnames = ["Who", "Description", "Card", "Amount", "Date"]
-            writer = csv.DictWriter(f, fieldnames=fieldnames)
-            if not file_exists:
-                writer.writeheader()
-            writer.writerow(new_owed)
+    st.session_state.last_owed_action={"kind":"add","items":[entry]}
+    st.success("Added to owed 💗")
+    st.rerun()
 
-        st.session_state.last_owed_action = {
-            "kind": "add",
-            "items": [new_owed],
-        }
 
-        st.success("Added to 'people owe me' list ✅")
-        st.rerun()
-    else:
-        st.error("Please fill in who, what for, and an amount > 0.")
-
+# ========== MANAGE OWED LIST ==========
 if st.session_state.owed:
-    st.subheader("Pending payments")
+    st.subheader("Pending Repayments")
+    remove=[]
+    undo_pairs=[]
 
-    to_remove_indices = []
-    settlements = []
-
-    for i, item in enumerate(st.session_state.owed):
-        cols = st.columns([1, 5])
-        with cols[0]:
-            paid = st.checkbox("", key=f"paid_{i}")
-        with cols[1]:
-            st.write(
-                f"**{item['Who']}** owes **£{item['Amount']:.2f}** "
-                f"for **{item['Description']}** "
-                f"(date: {item['Date']}, card: {item['Card']})"
-            )
+    for i,item in enumerate(st.session_state.owed):
+        c=st.columns([1,6])
+        paid=c[0].checkbox("",key=f"owed_{i}")
+        c[1].write(f"**{item['Who']} owes £{item['Amount']:.2f}** for *{item['Description']}* ({item['Card']})")
 
         if paid:
-            reimb_desc = f"Reimbursement from {item['Who']} - {item['Description']}"
-            reimb = {
-                "Description": reimb_desc,
-                "Category": "Reimbursement",
-                "Card": item["Card"],
-                "Amount": float(item["Amount"]),
-                "Date": date.today().strftime("%Y-%m-%d"),
+            reimb={
+                "Description":f"Reimbursement from {item['Who']} - {item['Description']}",
+                "Category":"Reimbursement",
+                "Card":item["Card"],
+                "Amount":float(item["Amount"]),
+                "Date":date.today().strftime("%Y-%m-%d"),
             }
-
             st.session_state.expenses.append(reimb)
 
-            file_exists = os.path.exists(EXPENSE_FILE)
-            with open(EXPENSE_FILE, mode="a", newline="") as f:
-                fieldnames = ["Description", "Category", "Card", "Amount", "Date"]
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
-                if not file_exists:
-                    writer.writeheader()
-                writer.writerow(reimb)
+            with open(EXPENSE_FILE,"a",newline="") as f:
+                w=csv.DictWriter(f,fieldnames=reimb.keys())
+                if not os.path.exists(EXPENSE_FILE): w.writeheader()
+                w.writerow(reimb)
 
-            to_remove_indices.append(i)
-            settlements.append({"owed": item, "reimb": reimb})
+            remove.append(i)
+            undo_pairs.append({"owed":item,"reimb":reimb})
 
-    if to_remove_indices:
-        for idx in sorted(to_remove_indices, reverse=True):
-            st.session_state.owed.pop(idx)
+    if remove:
+        for idx in sorted(remove,reverse=True): st.session_state.owed.pop(idx)
 
         if st.session_state.owed:
-            with open(OWED_FILE, mode="w", newline="") as f:
-                fieldnames = ["Who", "Description", "Card", "Amount", "Date"]
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
-                writer.writeheader()
-                for row in st.session_state.owed:
-                    writer.writerow(row)
+            with open(OWED_FILE,"w",newline="") as f:
+                w=csv.DictWriter(f,fieldnames=["Who","Description","Card","Amount","Date"])
+                w.writeheader()
+                for r in st.session_state.owed: w.writerow(r)
         else:
-            if os.path.exists(OWED_FILE):
-                os.remove(OWED_FILE)
+            if os.path.exists(OWED_FILE): os.remove(OWED_FILE)
 
-        st.session_state.last_owed_action = {
-            "kind": "settle",
-            "items": settlements,
-        }
-
-        st.success("Marked as paid ✅ and added reimbursement to your tracker.")
+        st.session_state.last_owed_action={"kind":"settle","items":undo_pairs}
+        st.success("Repayment recorded 🌸")
         st.rerun()
+
 else:
-    st.info("No one owes you money right now.")
+    st.info("Nobody owes you right now 💞")
 
-st.subheader("🪄 Undo last change in 'people owe me'")
+# ----- UNDO OWED -----
+st.subheader("🪄 Undo Owed Action")
 
-if st.button("Undo last owed action"):
-    action = st.session_state.get("last_owed_action")
-
-    if not action:
-        st.warning("There is no recent owed action to undo.")
+if st.button("Undo last owed"):
+    a=st.session_state.last_owed_action
+    if not a: st.warning("nothing to undo!")
     else:
-        kind = action["kind"]
-        items = action["items"]
+        if a["kind"]=="add":
+            target=a["items"][0]
+            st.session_state.owed=[o for o in st.session_state.owed if not(
+                o["Who"]==target["Who"] and o["Description"]==target["Description"])]
+            st.success("Undo added owed ✓")
 
-        if kind == "add":
-            target = items[0]
-            for idx in range(len(st.session_state.owed) - 1, -1, -1):
-                o = st.session_state.owed[idx]
-                if (
-                    o["Who"] == target["Who"]
-                    and o["Description"] == target["Description"]
-                    and o["Card"] == target["Card"]
-                    and float(o["Amount"]) == float(target["Amount"])
-                    and o["Date"] == target["Date"]
-                ):
-                    st.session_state.owed.pop(idx)
-                    break
+        elif a["kind"]=="settle":
+            for pair in a["items"]:
+                st.session_state.owed.append(pair["owed"])
+                st.session_state.expenses=[e for e in st.session_state.expenses if not(
+                    e["Description"]==pair["reimb"]["Description"])]
+            st.success("Undo repayment ✓")
 
-            if st.session_state.owed:
-                with open(OWED_FILE, "w", newline="") as f:
-                    fieldnames = ["Who", "Description", "Card", "Amount", "Date"]
-                    writer = csv.DictWriter(f, fieldnames=fieldnames)
-                    writer.writeheader()
-                    for row in st.session_state.owed:
-                        writer.writerow(row)
-            else:
-                if os.path.exists(OWED_FILE):
-                    os.remove(OWED_FILE)
+        with open(OWED_FILE,"w",newline="") as f:
+            w=csv.DictWriter(f,fieldnames=["Who","Description","Card","Amount","Date"])
+            w.writeheader()
+            for r in st.session_state.owed: w.writerow(r)
 
-            st.success("Undid last 'add to owed list' action.")
-            st.session_state.last_owed_action = None
-            st.rerun()
+        with open(EXPENSE_FILE,"w",newline="") as f:
+            w=csv.DictWriter(f,fieldnames=["Description","Category","Card","Amount","Date"])
+            w.writeheader()
+            for r in st.session_state.expenses: w.writerow(r)
 
-        elif kind == "settle":
-            for pair in items:
-                owed_item = pair["owed"]
-                reimb = pair["reimb"]
+        st.session_state.last_owed_action=None
+        st.rerun()
 
-                st.session_state.owed.append(owed_item)
+st.markdown("</div>",unsafe_allow_html=True)
 
-                for idx in range(len(st.session_state.expenses) - 1, -1, -1):
-                    e = st.session_state.expenses[idx]
-                    if (
-                        e["Description"] == reimb["Description"]
-                        and e["Category"] == reimb["Category"]
-                        and e["Card"] == reimb["Card"]
-                        and float(e["Amount"]) == float(reimb["Amount"])
-                        and e["Date"] == reimb["Date"]
-                    ):
-                        st.session_state.expenses.pop(idx)
-                        break
 
-            if st.session_state.owed:
-                with open(OWED_FILE, "w", newline="") as f:
-                    fieldnames = ["Who", "Description", "Card", "Amount", "Date"]
-                    writer = csv.DictWriter(f, fieldnames=fieldnames)
-                    writer.writeheader()
-                    for row in st.session_state.owed:
-                        writer.writerow(row)
-            else:
-                if os.path.exists(OWED_FILE):
-                    os.remove(OWED_FILE)
 
-            if st.session_state.expenses:
-                with open(EXPENSE_FILE, "w", newline="") as f:
-                    fieldnames = ["Description", "Category", "Card", "Amount", "Date"]
-                    writer = csv.DictWriter(f, fieldnames=fieldnames)
-                    writer.writeheader()
-                    for row in st.session_state.expenses:
-                        writer.writerow(row)
-            else:
-                if os.path.exists(EXPENSE_FILE):
-                    os.remove(EXPENSE_FILE)
+# ========= EXPENSE TABLE + CHARTS =========
+st.markdown("<div class='pixel-card'>",unsafe_allow_html=True)
 
-            st.success("Undid last 'paid' action and restored owed + expenses.")
-            st.session_state.last_owed_action = None
-            st.rerun()
-
-st.markdown("</div>", unsafe_allow_html=True)
-
-# ---------- EXPENSE TABLES & CHARTS ----------
-st.markdown("<div class='pixel-card'>", unsafe_allow_html=True)
-
-st.header("📄 All Expenses")
+st.header("📂 All Expenses")
 if df is not None and not df.empty:
-    st.dataframe(df.sort_values("Date"), width="stretch")
-else:
-    st.info("No expenses recorded yet.")
+    st.dataframe(df.sort_values("Date"))
+else: st.info("Add something 🥺")
 
-st.header("📂 Filtered (Year / Month / Card)")
+st.header("📊 Filtered View")
 if filtered_df is not None and not filtered_df.empty:
-    st.write(
-        f"Showing **{selected_year}** / **{selected_month_name}** / **{selected_card_label}**"
-    )
-    st.dataframe(filtered_df.sort_values("Date"), width="stretch")
+    st.write("Filtered results below ↓")
+    st.dataframe(filtered_df.sort_values("Date"))
 else:
-    st.info("No expenses match those filters yet.")
+    st.info("No items for those filters 💗")
 
-st.header("📊 Charts")
+st.header("📈 Charts")
 if filtered_df is not None and not filtered_df.empty:
-    daily = filtered_df.groupby("Date")["Amount"].sum()
-    st.subheader("Daily total")
-    st.line_chart(daily)
+    daily=filtered_df.groupby("Date")["Amount"].sum()
+    st.subheader("Daily Totals") ; st.line_chart(daily)
 
-    cat_totals = filtered_df.groupby("Category")["Amount"].sum()
-    st.subheader("By category")
-    st.bar_chart(cat_totals)
+    cat=filtered_df.groupby("Category")["Amount"].sum()
+    st.subheader("By Category") ; st.bar_chart(cat)
 else:
-    st.info("Add expenses and pick a period to see charts.")
+    st.info("Add expenses first 🌸")
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("</div>",unsafe_allow_html=True)
 
-# ---------- UNDO LAST EXPENSE ----------
-st.markdown("<div class='pixel-card'>", unsafe_allow_html=True)
+
+# ========= UNDO EXPENSE =========
+st.markdown("<div class='pixel-card'>",unsafe_allow_html=True)
 st.header("🪄 Undo Last Expense")
 
-if st.button("Undo Last Expense"):
+if st.button("Undo Expense"):
     if st.session_state.expenses:
-        removed = st.session_state.expenses.pop()
+        popped=st.session_state.expenses.pop()
 
         if st.session_state.expenses:
-            with open(EXPENSE_FILE, "w", newline="") as f:
-                fieldnames = ["Description", "Category", "Card", "Amount", "Date"]
-                writer = csv.DictWriter(f, fieldnames=fieldnames)
-                writer.writeheader()
-                for row in st.session_state.expenses:
-                    writer.writerow(row)
+            with open(EXPENSE_FILE,"w",newline="") as f:
+                w=csv.DictWriter(f,fieldnames=["Description","Category","Card","Amount","Date"])
+                w.writeheader()
+                for r in st.session_state.expenses: w.writerow(r)
         else:
-            if os.path.exists(EXPENSE_FILE):
-                os.remove(EXPENSE_FILE)
+            if os.path.exists(EXPENSE_FILE): os.remove(EXPENSE_FILE)
 
-        st.success(
-            f"Removed ➝ {removed['Description']} (£{removed['Amount']:.2f})"
-        )
+        st.success(f"Removed {popped['Description']} 🌸")
         st.rerun()
-    else:
-        st.warning("Nothing to undo.")
+    else: st.warning("nothing to undo")
 
-st.markdown("</div>", unsafe_allow_html=True)
+st.markdown("</div>",unsafe_allow_html=True)
