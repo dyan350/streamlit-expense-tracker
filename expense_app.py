@@ -4,14 +4,127 @@ import csv
 import os
 import pandas as pd
 
-st.title("💸 Katie's Expense Tracker")
+# ---------- PAGE CONFIG ----------
+st.set_page_config(
+    page_title="Katie's Expense Tracker",
+    page_icon="💸",
+    layout="wide",
+)
 
+# ---------- PINK PIXEL CSS ----------
+def inject_custom_css():
+    st.markdown(
+        """
+        <style>
+        /* === APP BACKGROUND: soft pink pixel grid === */
+        .stApp {
+            background:
+              linear-gradient(90deg, rgba(255,255,255,0.35) 1px, transparent 1px),
+              linear-gradient(180deg, rgba(255,255,255,0.35) 1px, #ffe6f2 1px),
+              radial-gradient(circle at 0 0, #ffc1e3 0, #ffe6f7 40%, #ffd9ec 80%);
+            background-size: 16px 16px, 16px 16px, cover;
+            color: #4a2456;
+            font-family: "Press Start 2P", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        html, body, [class*="css"] {
+            font-family: "Press Start 2P", system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+        }
+
+        /* === TOP TITLE STYLES === */
+        .top-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #ff6ea9; /* medium pink */
+            text-shadow: 3px 3px 0 #ff94c2, 5px 5px 0 #2c2a87; /* light pink + dark outline */
+            margin-bottom: 0.5rem;
+        }
+        .top-subtitle {
+            font-size: 0.7rem;
+            color: #ff7eb8;
+            text-shadow: 2px 2px 0 #ffffff;
+            margin-bottom: 1.5rem;
+        }
+
+        /* === PINK PIXEL CARDS === */
+        .pixel-card {
+            border: 3px solid #2c2a87;     /* dark blue outline */
+            border-radius: 0;
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+            background: #ffe6f7;           /* pale pink */
+            box-shadow: 4px 4px 0 #ff94c2; /* pink shadow */
+        }
+
+        .pixel-card h1, .pixel-card h2, .pixel-card h3 {
+            color: #ff4f9a;
+            text-shadow: 2px 2px 0 #ffffff;
+        }
+
+        /* === WIDGETS (buttons, inputs, selects) === */
+        .stButton>button,
+        .stCheckbox,
+        .stTextInput>div>div>input,
+        .stNumberInput input,
+        div[data-baseweb="select"] > div {
+            border-radius: 0 !important;
+            border: 2px solid #2c2a87 !important;
+            background: #ffd9ec !important;
+            color: #4a2456 !important;
+            box-shadow: 3px 3px 0 #ff94c2 !important;
+        }
+
+        .stButton>button:hover {
+            background: #ff6ea9 !important;
+            color: #ffffff !important;
+            box-shadow: 4px 4px 0 #2c2a87 !important;
+        }
+
+        /* Inputs text caret color */
+        input {
+            caret-color: #ff4f9a !important;
+        }
+
+        /* TABLES / DATAFRAMES */
+        .stDataFrame, .stTable {
+            border-radius: 0 !important;
+            border: 2px solid #2c2a87 !important;
+            box-shadow: 3px 3px 0 #ff94c2 !important;
+        }
+
+        /* Sidebar background soften */
+        [data-testid="stSidebar"] {
+            background-color: #ffe6f7 !important;
+            border-right: 3px solid #2c2a87;
+        }
+        </style>
+        """,
+        unsafe_allow_html=True
+    )
+
+inject_custom_css()
+
+# ---------- TITLE ----------
+st.markdown(
+    "<div class='top-title'>💸 Katie's Expense Tracker</div>",
+    unsafe_allow_html=True,
+)
+st.markdown(
+    "<div class='top-subtitle'>Cute pink pixels. Track spending & IOUs with love. ♡</div>",
+    unsafe_allow_html=True,
+)
+
+# If you save your pixel image as 'katie_pixel.png' in this folder,
+# you can uncomment this line to show it:
+# st.image("katie_pixel.png", width=140)
+
+# ---------- FILE NAMES ----------
 EXPENSE_FILE = "expenses.csv"
 OWED_FILE = "owed.csv"   # where we store “people owe me” items
 
-# --------------------------------
-# Load expenses from CSV into session
-# --------------------------------
+# ---------- LOAD EXPENSES ----------
 if "expenses" not in st.session_state:
     st.session_state.expenses = []
 
@@ -20,20 +133,16 @@ if "expenses" not in st.session_state:
             reader = csv.DictReader(f)
             for row in reader:
                 row["Amount"] = float(row["Amount"])
-                # Older files might not have Card column; handle that
                 if "Card" not in row:
                     row["Card"] = "Unknown"
                 st.session_state.expenses.append(row)
 
-# Build DataFrame from expenses
 df = None
 if st.session_state.expenses:
     df = pd.DataFrame(st.session_state.expenses)
     df["Date"] = pd.to_datetime(df["Date"])
 
-# --------------------------------
-# Load “people owe me” items
-# --------------------------------
+# ---------- LOAD OWED ITEMS ----------
 if "owed" not in st.session_state:
     st.session_state.owed = []
 
@@ -44,13 +153,11 @@ if "owed" not in st.session_state:
                 row["Amount"] = float(row["Amount"])
                 st.session_state.owed.append(row)
 
-# Track last action in owed section so we can undo it
+# Track last action in owed section for undo
 if "last_owed_action" not in st.session_state:
     st.session_state.last_owed_action = None
 
-# --------------------------------
-# Sidebar Filters (Year + Month + Card)
-# --------------------------------
+# ---------- SIDEBAR FILTERS (YEAR / MONTH / CARD) ----------
 st.sidebar.header("Filters")
 
 filtered_df = None
@@ -59,11 +166,9 @@ selected_month_name = "All months"
 selected_card_label = "All cards"
 
 if df is not None and not df.empty:
-    # ----- Year -----
     years = sorted(df["Date"].dt.year.unique())
     selected_year = st.sidebar.selectbox("Year", years, index=len(years) - 1)
 
-    # ----- Month -----
     month_names = [
         "All months",
         "January", "February", "March", "April", "May", "June",
@@ -74,12 +179,10 @@ if df is not None and not df.empty:
     selected_month_name = st.sidebar.selectbox("Month", month_names, index=0)
     selected_month = month_numbers[month_names.index(selected_month_name)]
 
-    # ----- Card filter -----
     cards = sorted(df["Card"].astype(str).unique())
     card_options = ["All cards"] + cards
     selected_card_label = st.sidebar.selectbox("Card", card_options, index=0)
 
-    # Apply filters step by step
     filtered_df = df[df["Date"].dt.year == selected_year]
 
     if selected_month is not None:
@@ -90,9 +193,8 @@ if df is not None and not df.empty:
 else:
     st.sidebar.info("No data yet to filter.")
 
-# --------------------------------
-# Add Expense Form
-# --------------------------------
+# ---------- ADD EXPENSE ----------
+st.markdown("<div class='pixel-card'>", unsafe_allow_html=True)
 st.header("➕ Add New Expense")
 
 with st.form("expense_form"):
@@ -129,10 +231,8 @@ if submitted:
         with open(EXPENSE_FILE, mode="a", newline="") as f:
             fieldnames = ["Description", "Category", "Card", "Amount", "Date"]
             writer = csv.DictWriter(f, fieldnames=fieldnames)
-
             if not file_exists:
                 writer.writeheader()
-
             writer.writerow(new_expense)
 
         st.success("Expense added and saved permanently! 💾")
@@ -140,16 +240,15 @@ if submitted:
     else:
         st.error("Enter a description and an amount greater than zero.")
 
-# --------------------------------
-# Section: Money people owe me
-# --------------------------------
+st.markdown("</div>", unsafe_allow_html=True)
+
+# ---------- MONEY PEOPLE OWE ME ----------
+st.markdown("<div class='pixel-card'>", unsafe_allow_html=True)
 st.header("🔫 Give me my money bro 🔫")
 
-# Total owed display
 total_owed = sum(item["Amount"] for item in st.session_state.owed) if st.session_state.owed else 0.0
 st.write(f"**Total people owe you: £{total_owed:.2f}**")
 
-# Form to add a new "owed" item
 with st.form("owed_form"):
     who = st.text_input("Who owes you?", placeholder="e.g. Alice")
     owed_desc = st.text_input("What is it for?", placeholder="e.g. Dinner split")
@@ -158,8 +257,17 @@ with st.form("owed_form"):
         ["Visa", "Mastercard", "Amex", "Debit", "Cash", "Other"],
         key="owed_card_select"
     )
-    owed_amount = st.number_input("Amount they owe (£)", min_value=0.0, format="%.2f", key="owed_amount_input")
-    owed_date = st.date_input("Date of expense", value=date.today(), key="owed_date_input")
+    owed_amount = st.number_input(
+        "Amount they owe (£)",
+        min_value=0.0,
+        format="%.2f",
+        key="owed_amount_input"
+    )
+    owed_date = st.date_input(
+        "Date of expense",
+        value=date.today(),
+        key="owed_date_input"
+    )
 
     owed_submitted = st.form_submit_button("Add to owed list")
 
@@ -182,7 +290,6 @@ if owed_submitted:
                 writer.writeheader()
             writer.writerow(new_owed)
 
-        # remember this as last action for undo
         st.session_state.last_owed_action = {
             "kind": "add",
             "items": [new_owed],
@@ -193,12 +300,11 @@ if owed_submitted:
     else:
         st.error("Please fill in who, what for, and an amount > 0.")
 
-# Show pending owed items with checkboxes
 if st.session_state.owed:
     st.subheader("Pending payments")
 
     to_remove_indices = []
-    settlements = []  # store (owed_item, reimb) for undo
+    settlements = []
 
     for i, item in enumerate(st.session_state.owed):
         cols = st.columns([1, 5])
@@ -212,7 +318,6 @@ if st.session_state.owed:
             )
 
         if paid:
-            # 1) Add this as a reimbursement into expenses
             reimb_desc = f"Reimbursement from {item['Who']} - {item['Description']}"
             reimb = {
                 "Description": reimb_desc,
@@ -232,11 +337,9 @@ if st.session_state.owed:
                     writer.writeheader()
                 writer.writerow(reimb)
 
-            # 2) Mark this owed entry to be removed
             to_remove_indices.append(i)
             settlements.append({"owed": item, "reimb": reimb})
 
-    # Remove paid items and rewrite owed CSV
     if to_remove_indices:
         for idx in sorted(to_remove_indices, reverse=True):
             st.session_state.owed.pop(idx)
@@ -252,7 +355,6 @@ if st.session_state.owed:
             if os.path.exists(OWED_FILE):
                 os.remove(OWED_FILE)
 
-        # remember this as last action for undo (settling debts)
         st.session_state.last_owed_action = {
             "kind": "settle",
             "items": settlements,
@@ -263,9 +365,6 @@ if st.session_state.owed:
 else:
     st.info("No one owes you money right now.")
 
-# --------------------------------
-# Undo last owed action (add or settle)
-# --------------------------------
 st.subheader("🪄 Undo last change in 'people owe me'")
 
 if st.button("Undo last owed action"):
@@ -278,9 +377,7 @@ if st.button("Undo last owed action"):
         items = action["items"]
 
         if kind == "add":
-            # Remove the last added owed item
             target = items[0]
-            # Remove one matching entry from owed list (from the end)
             for idx in range(len(st.session_state.owed) - 1, -1, -1):
                 o = st.session_state.owed[idx]
                 if (
@@ -293,7 +390,6 @@ if st.button("Undo last owed action"):
                     st.session_state.owed.pop(idx)
                     break
 
-            # Rewrite owed CSV
             if st.session_state.owed:
                 with open(OWED_FILE, "w", newline="") as f:
                     fieldnames = ["Who", "Description", "Card", "Amount", "Date"]
@@ -310,15 +406,12 @@ if st.button("Undo last owed action"):
             st.rerun()
 
         elif kind == "settle":
-            # For each settlement, re-add owed item and remove reimbursement
             for pair in items:
                 owed_item = pair["owed"]
                 reimb = pair["reimb"]
 
-                # Re-add owed item
                 st.session_state.owed.append(owed_item)
 
-                # Remove matching reimbursement from expenses (search from end)
                 for idx in range(len(st.session_state.expenses) - 1, -1, -1):
                     e = st.session_state.expenses[idx]
                     if (
@@ -331,7 +424,6 @@ if st.button("Undo last owed action"):
                         st.session_state.expenses.pop(idx)
                         break
 
-            # Rewrite owed CSV
             if st.session_state.owed:
                 with open(OWED_FILE, "w", newline="") as f:
                     fieldnames = ["Who", "Description", "Card", "Amount", "Date"]
@@ -343,7 +435,6 @@ if st.button("Undo last owed action"):
                 if os.path.exists(OWED_FILE):
                     os.remove(OWED_FILE)
 
-            # Rewrite expenses CSV
             if st.session_state.expenses:
                 with open(EXPENSE_FILE, "w", newline="") as f:
                     fieldnames = ["Description", "Category", "Card", "Amount", "Date"]
@@ -359,18 +450,17 @@ if st.button("Undo last owed action"):
             st.session_state.last_owed_action = None
             st.rerun()
 
-# --------------------------------
-# All Expenses Table
-# --------------------------------
+st.markdown("</div>", unsafe_allow_html=True)
+
+# ---------- EXPENSE TABLES & CHARTS ----------
+st.markdown("<div class='pixel-card'>", unsafe_allow_html=True)
+
 st.header("📄 All Expenses")
 if df is not None and not df.empty:
     st.dataframe(df.sort_values("Date"), width="stretch")
 else:
     st.info("No expenses recorded yet.")
 
-# --------------------------------
-# Filtered View
-# --------------------------------
 st.header("📂 Filtered (Year / Month / Card)")
 if filtered_df is not None and not filtered_df.empty:
     st.write(
@@ -380,26 +470,22 @@ if filtered_df is not None and not filtered_df.empty:
 else:
     st.info("No expenses match those filters yet.")
 
-# --------------------------------
-# Charts
-# --------------------------------
 st.header("📊 Charts")
 if filtered_df is not None and not filtered_df.empty:
-    # Daily spending
     daily = filtered_df.groupby("Date")["Amount"].sum()
     st.subheader("Daily total")
     st.line_chart(daily)
 
-    # By category (this will include 'Reimbursement' as its own bar)
     cat_totals = filtered_df.groupby("Category")["Amount"].sum()
     st.subheader("By category")
     st.bar_chart(cat_totals)
 else:
     st.info("Add expenses and pick a period to see charts.")
 
-# --------------------------------
-# Undo Last Expense
-# --------------------------------
+st.markdown("</div>", unsafe_allow_html=True)
+
+# ---------- UNDO LAST EXPENSE ----------
+st.markdown("<div class='pixel-card'>", unsafe_allow_html=True)
 st.header("🪄 Undo Last Expense")
 
 if st.button("Undo Last Expense"):
@@ -423,3 +509,5 @@ if st.button("Undo Last Expense"):
         st.rerun()
     else:
         st.warning("Nothing to undo.")
+
+st.markdown("</div>", unsafe_allow_html=True)
