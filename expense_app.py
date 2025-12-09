@@ -112,7 +112,7 @@ st.markdown(
     unsafe_allow_html=True,
 )
 st.markdown(
-    "<div class='top-subtitle'>Cute pink pixels. Track spending & IOUs with love. ♡</div>",
+    "<div class='top-subtitle'>♡ I love you baby ♡</div>",
     unsafe_allow_html=True,
 )
 
