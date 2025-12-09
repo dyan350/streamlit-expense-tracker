@@ -122,6 +122,15 @@ inject_custom_css()
 st.markdown("<div class='top-title'>💸 Katie's Expense Tracker</div>",unsafe_allow_html=True)
 st.markdown("<div class='top-subtitle'>♡ I love you ♡</div>",unsafe_allow_html=True)
 
+st.markdown(
+    """
+    <div style='text-align:center; margin-top:-10px; margin-bottom:20px;'>
+        <img src='dog.png' width='160'>
+    </div>
+    """,
+    unsafe_allow_html=True
+)
+
 
 
 
