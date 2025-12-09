@@ -49,15 +49,21 @@ if "last_owed_action" not in st.session_state:
     st.session_state.last_owed_action = None
 
 # --------------------------------
-# Sidebar Filters (Year + Month)
+# Sidebar Filters (Year + Month + Card)
 # --------------------------------
 st.sidebar.header("Filters")
 
 filtered_df = None
+selected_year = None
+selected_month_name = "All months"
+selected_card_label = "All cards"
+
 if df is not None and not df.empty:
+    # ----- Year -----
     years = sorted(df["Date"].dt.year.unique())
     selected_year = st.sidebar.selectbox("Year", years, index=len(years) - 1)
 
+    # ----- Month -----
     month_names = [
         "All months",
         "January", "February", "March", "April", "May", "June",
@@ -68,9 +74,19 @@ if df is not None and not df.empty:
     selected_month_name = st.sidebar.selectbox("Month", month_names, index=0)
     selected_month = month_numbers[month_names.index(selected_month_name)]
 
+    # ----- Card filter -----
+    cards = sorted(df["Card"].astype(str).unique())
+    card_options = ["All cards"] + cards
+    selected_card_label = st.sidebar.selectbox("Card", card_options, index=0)
+
+    # Apply filters step by step
     filtered_df = df[df["Date"].dt.year == selected_year]
+
     if selected_month is not None:
         filtered_df = filtered_df[filtered_df["Date"].dt.month == selected_month]
+
+    if selected_card_label != "All cards":
+        filtered_df = filtered_df[filtered_df["Card"] == selected_card_label]
 else:
     st.sidebar.info("No data yet to filter.")
 
@@ -129,7 +145,7 @@ if submitted:
 # --------------------------------
 st.header("🔫 Give me my money bro 🔫")
 
-# Optional total owed display
+# Total owed display
 total_owed = sum(item["Amount"] for item in st.session_state.owed) if st.session_state.owed else 0.0
 st.write(f"**Total people owe you: £{total_owed:.2f}**")
 
@@ -355,9 +371,11 @@ else:
 # --------------------------------
 # Filtered View
 # --------------------------------
-st.header("📂 Filtered (Year / Month)")
+st.header("📂 Filtered (Year / Month / Card)")
 if filtered_df is not None and not filtered_df.empty:
-    st.write(f"Showing **{selected_year}** / **{selected_month_name}**")
+    st.write(
+        f"Showing **{selected_year}** / **{selected_month_name}** / **{selected_card_label}**"
+    )
     st.dataframe(filtered_df.sort_values("Date"), width="stretch")
 else:
     st.info("No expenses match those filters yet.")
