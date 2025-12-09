@@ -123,7 +123,7 @@ if submitted:
 # --------------------------------
 # Section: Money people owe me
 # --------------------------------
-st.header("🔫) Give me my money bro 🔫")
+st.header("🔫 Give me my money bro 🔫")
 
 # Form to add a new "owed" item
 with st.form("owed_form"):
